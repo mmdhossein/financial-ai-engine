@@ -17,9 +17,13 @@ class SpendingPatternsRepository:
             data[column] = data[column].apply(
                 lambda x: datetime.combine(x, datetime.min.time()) if isinstance(x, date) else x
             )
-        self.db['clusters'].delete_many({})  # Clear old assignments
+        # self.db['clusters'].delete_many({})  # Clear old assignments
         print("sexy", data.to_dict('records')[2])
         self.db['clusters'].insert_many(data.to_dict('records'))
+
+    def deleteClusters(self):
+        self.db['clusters'].delete_many({})  # Clear old assignments
+
 
     def fetch_user_data(self, user_id):
         # Fetch user data and their cluster assignment
