@@ -4,9 +4,9 @@ from domains import spending_patterns, revenue_forecast, cash_flow
 router = Blueprint('router', __name__)
 
 # Spending Patterns Endpoints
-# router.add_url_rule(
-#     '/spending-patterns/train', 'train_spending_patterns', spending_patterns.train, methods=['POST']
-# )
+router.add_url_rule(
+    '/spending-patterns/train', 'train_spending_patterns', spending_patterns.train, methods=['POST']
+)
 router.add_url_rule(
     '/spending-patterns/insights', 'get_spending_insights', spending_patterns.get_insights, methods=['GET']
 )
