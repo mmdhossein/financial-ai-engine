@@ -60,21 +60,49 @@ class SpendingPatternsService:
         #     .sort_values(by=["userSerial", "count"], ascending=False)
         # )
 
-                # Add a recency weight (e.g., inverse of days since the transaction)
+       
+ 
+        cluster_likelihood = (
+        user_data_df.groupby(["cluster"])
+        .size()
+        .reset_index(name="count")
+        .sort_values(by=["count"], ascending=False)
+        )
+        
+        # Add a recency weight (e.g., inverse of days since the transaction)
         user_data_df["days_ago"] = (datetime.now() - user_data_df["time"]).dt.days
         user_data_df["recency_weight"] = 1 / (user_data_df["days_ago"] + 1)  # Add 1 to avoid division by zero
-       
-        cluster_likelihood = (
+
+        weighted_likelihood  = (
         user_data_df.groupby([ "cluster"])["recency_weight"]
         .sum()
         .reset_index()
         .sort_values(by=["recency_weight"], ascending=False)
         )
 
-        print("calculated likelihood: ", cluster_likelihood.head())
+        print("calculated cluster_likelihood: ", cluster_likelihood.head())
+        print("calculated weighted_likelihood: ", weighted_likelihood.head())
+
+
+        # Merge counts and recency weights
+        final_likelihood = pd.merge(
+        cluster_likelihood,
+        weighted_likelihood,
+        on=["cluster"],
+        how="left"
+        )
+
+        print("calculated final_likelihood: ", final_likelihood.head())
+
+
+        # Combine scores (adjust weights as needed)
+        final_likelihood["final_score"] = final_likelihood["count"] + final_likelihood["recency_weight"]
+
+        # Get the top cluster for each user
+        idxMax = final_likelihood["final_score"].idxmax()
 
         # cluster_id = user_data['cluster']
-        cluster_id = (cluster_likelihood['cluster'].iloc[0]).item()
+        cluster_id = (final_likelihood['cluster'].iloc[idxMax]).item()
         print("getting cluster info for cluster id: ", cluster_id )
         cluster_details = self.repository.fetch_cluster_details(cluster_id).to_list()
         return {
