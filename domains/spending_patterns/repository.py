@@ -23,7 +23,7 @@ class SpendingPatternsRepository:
 
     def fetch_user_data(self, user_id):
         # Fetch user data and their cluster assignment
-        return self.db['clusters'].find_one({"userSerial": user_id})
+        return self.db['clusters'].find({"userSerial": user_id})
 
     def fetch_cluster_details(self, cluster_id):
         # Fetch aggregated details for a specific cluster
@@ -33,7 +33,9 @@ class SpendingPatternsRepository:
                 "_id": "$cluster",
                 "average_spending": {"$avg": "$amount"},
                 "user_count": {"$sum": 1}
-            }}
+            }}, 
+            {"$project":  {'_id': 0}
+            }
         ])
 
     def fetch_all_cluster_details(self):

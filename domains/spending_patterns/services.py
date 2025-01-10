@@ -4,6 +4,8 @@ import requests
 import pandas as pd
 import joblib
 from flask import request, jsonify
+import numpy as np
+from datetime import datetime, timedelta
 
 class SpendingPatternsService:
     def __init__(self):
@@ -46,11 +48,35 @@ class SpendingPatternsService:
     def get_user_insights(self, user_id):
         # Fetch the user's cluster assignment
         user_data = self.repository.fetch_user_data(user_id)
+        user_data_df = pd.DataFrame(list(user_data))
+        print("user df", user_data_df.head())
         if user_data is None:
             return {"message": f"No data found for user_id: {user_id}"}
-        
-        cluster_id = user_data['cluster']
-        cluster_details = self.repository.fetch_cluster_details(cluster_id)
+        # Calculate cluster likelihood
+        # cluster_likelihood = (
+        #     user_data_df.groupby(["userSerial", "cluster"])
+        #     .size()
+        #     .reset_index(name="count")
+        #     .sort_values(by=["userSerial", "count"], ascending=False)
+        # )
+
+                # Add a recency weight (e.g., inverse of days since the transaction)
+        user_data_df["days_ago"] = (datetime.now() - user_data_df["time"]).dt.days
+        user_data_df["recency_weight"] = 1 / (user_data_df["days_ago"] + 1)  # Add 1 to avoid division by zero
+       
+        cluster_likelihood = (
+        user_data_df.groupby([ "cluster"])["recency_weight"]
+        .sum()
+        .reset_index()
+        .sort_values(by=["recency_weight"], ascending=False)
+        )
+
+        print("calculated likelihood: ", cluster_likelihood.head())
+
+        # cluster_id = user_data['cluster']
+        cluster_id = (cluster_likelihood['cluster'].iloc[0]).item()
+        print("getting cluster info for cluster id: ", cluster_id )
+        cluster_details = self.repository.fetch_cluster_details(cluster_id).to_list()
         return {
             "user_id": user_id,
             "cluster_id": cluster_id,
