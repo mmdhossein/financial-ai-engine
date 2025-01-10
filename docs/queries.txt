@@ -1,0 +1,42 @@
+1-User-Level Aggregated Spending
+SELECT 
+    userSerial, 
+    SUM(amount) AS totalAmount, 
+    COUNT(*) AS transactionCount 
+FROM 
+    Transactions 
+WHERE 
+    createDate BETWEEN ? AND ?
+    AND partnerId = ? 
+GROUP BY 
+    userSerial;
+
+
+2-Category-Based Analysis
+SELECT 
+    transactionType, 
+    SUM(amount) AS totalAmount, 
+    COUNT(*) AS transactionCount 
+FROM 
+    Transactions 
+WHERE 
+    createDate BETWEEN ? AND ?
+    AND partnerId = ? 
+GROUP BY 
+    transactionType;
+
+3-Daily Aggregates
+SELECT 
+    DATE(createDate) AS actionDate, 
+    SUM(amount) AS totalAmount, 
+    COUNT(*) AS transactionCount 
+FROM 
+    Transactions 
+WHERE 
+    partnerId = ? 
+GROUP BY 
+    DATE(createDate);
+
+
+
+
