@@ -6,6 +6,7 @@ import joblib
 from flask import request, jsonify
 import numpy as np
 from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
 
 class SpendingPatternsService:
     def __init__(self):
@@ -115,6 +116,30 @@ class SpendingPatternsService:
     def get_cluster_insights(self):
         # Summarize cluster details
         return self.repository.fetch_all_cluster_details()
+    
+    def getModelMetrics(self):
+        return self.model.getModelMetrics()
+    
+    def plotModelMetrics(eslf, metrics):
+        df = pd.DataFrame(metrics)
+
+        # Plot Inertia
+        plt.figure(figsize=(10, 5))
+        plt.plot(df["iteration"], df["inertia"], marker="o", label="Inertia")
+        plt.title("Inertia Over Iterations")
+        plt.xlabel("Iteration")
+        plt.ylabel("Inertia")
+        plt.legend()
+        plt.show()
+
+        # Plot Silhouette Score
+        plt.figure(figsize=(10, 5))
+        plt.plot(df["iteration"], df["silhouette_score"], marker="o", label="Silhouette Score")
+        plt.title("Silhouette Score Over Iterations")
+        plt.xlabel("Iteration")
+        plt.ylabel("Silhouette Score")
+        plt.legend()
+        plt.show()
 
 
 

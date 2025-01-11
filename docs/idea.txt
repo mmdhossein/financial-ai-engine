@@ -296,11 +296,23 @@ A lower inertia value implies a better model, as it indicates tighter clustering
 However, the inertia metric has a drawback: it keeps decreasing with an increase in the number of clusters ( k ). 
 This is where the “elbow method” is often used to find the optimal ( k ).
 Understanding the Silhouette Coefficient
-The Silhouette Coefficient is a measure of how similar an object is to its own cluster (cohesion) compared to other clusters (separation). The silhouette ranges from -1 to +1, where a high value indicates that the object is well matched to its own cluster and poorly matched to neighboring clusters.
-
+The Silhouette Coefficient is a measure of how similar an object is to its own cluster (cohesion) compared to other clusters (separation).
+The silhouette ranges from -1 to +1, where a high value indicates that the object is well matched to its own cluster and poorly matched to neighboring clusters.
 Key Points:
-
 A high silhouette score indicates well-clustered data.
 Unlike inertia, the silhouette score provides more nuanced insight into the separation 
 distance between the resulting clusters.
+Inertia and Silhouette Coefficient are crucial metrics for evaluating the performance of clustering algorithms
+ like K-Means. They provide different perspectives: inertia focuses on internal cluster compactness, 
+while silhouette coefficient assesses how well-separated the clusters are. 
+The choice of metric often depends on the specific requirements of the clustering problem at hand.
+Silhouette Score:
+Definition: Measures how similar a data point is to its own cluster compared to other clusters.
+Range: -1 to 1.
+A score near 1 indicates well-separated clusters.
+A score near 0 indicates overlapping clusters.
+A score near -1 suggests poor clustering.
 
+Look for any signs of metric degradation, such as:
+Increasing inertia over time (indicating less compact clusters).
+Decreasing silhouette score (indicating more overlap between clusters).

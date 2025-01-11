@@ -30,10 +30,12 @@ def train():
             print("processed_df", processed_df.head())
             clustered_data :pd.DataFrame= service.train_spending_pattern_model(processed_df)
             print("clustered_data", clustered_data.head())
+            
         except Exception as e:
             return jsonify({"error": str(e)}), 500
+    service.plotModelMetrics(service.getModelMetrics())
     return jsonify({"message": "Spending patterns model trained successfully!"
-                    , "status": "successfully_trained"}), 200
+                    , "status": "successfully_trained", "metrics": service.getModelMetrics()}), 200
 
 
 # Get customer spending insights
