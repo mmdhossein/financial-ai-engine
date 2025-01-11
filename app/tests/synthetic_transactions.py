@@ -71,7 +71,7 @@ def generate_user_behavior(user_serial, num_periods=3):
     data = []
     for _ in range(num_periods):
         partner_id = f"partner_{random.randint(1, 50)}"
-        transaction_type = random.choice(["purchase", "subscription", "refund", "charge"])
+        transaction_type = random.choice(["purchase", "subscription", "refund", "charge", "sim_top_up"])
         amount = round(random.uniform(50, 1000), 2)
         time = datetime.now() - timedelta(days=random.randint(0, 365))
 

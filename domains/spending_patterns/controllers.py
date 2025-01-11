@@ -8,7 +8,7 @@ from .repository import SpendingPatternsRepository
 def train():
     # repository = new SpendingPatternsRepository()
     # repository.deleteClusters()  
-    for _ in range(0, 10):
+    for _ in range(0, 1):
         try:
             # Fetch and preprocess data from an external service
             # training_data = service.fetch_training_data()

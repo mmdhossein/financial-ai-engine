@@ -8,6 +8,9 @@ import numpy as np
 from datetime import datetime, timedelta
 import matplotlib.pyplot as plt
 
+
+
+
 class SpendingPatternsService:
     def __init__(self):
         self.repository = SpendingPatternsRepository()
@@ -112,6 +115,7 @@ class SpendingPatternsService:
             "cluster_id": cluster_id,
             "cluster_details": cluster_details
         }
+    
 
     def get_cluster_insights(self):
         # Summarize cluster details

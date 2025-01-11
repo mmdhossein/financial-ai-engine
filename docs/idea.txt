@@ -316,3 +316,12 @@ A score near -1 suggests poor clustering.
 Look for any signs of metric degradation, such as:
 Increasing inertia over time (indicating less compact clusters).
 Decreasing silhouette score (indicating more overlap between clusters).
+
+
+ Why Add More Features?
+Capture User Behavior Beyond Spending:
+amount alone reflects spending levels but not spending patterns or user preferences.
+Improve Cluster Distinction:
+Additional features can help separate users who spend similar amounts but differ in other behaviors (e.g., transaction frequency, types of purchases).
+Provide Actionable Insights:
+Partners can use more detailed clustering to tailor marketing or operational strategies.
