@@ -200,6 +200,107 @@ Give higher weight to recent transactions when determining the likelihood.
 If recent behavior is more significant, weight cluster assignments by recency.
 
 
+a. Re-training vs Incremental Training
+Re-training (Your Current Approach):
+
+You train the model from scratch every time you fetch new data.
+This ensures the model captures both old and new patterns.
+Downside: Computationally expensive as the dataset grows.
+Incremental Training (Alternative):
+
+Some clustering algorithms (e.g., MiniBatchKMeans) allow incremental updates.
+Instead of re-training, you update the model with only the new data.
+When to Use:
+Your dataset is large, and re-training becomes slow.
+You fetch small batches of data frequently
+
+Over time, clusters may change as new data is introduced. To handle this:
+
+Track Cluster Changes:
+
+Log how users' cluster assignments change over time.
+Useful for insights like, "This user shifted from Budget-Conscious to High Spender."
+Validate Model Performance:
+Periodically check if the clusters remain meaningful 
+(e.g., through visualizations or metrics like silhouette score).
+
+Why Not Iterate Over KMeans?
+KMeans Algorithm Basics:
+KMeans re-calculates centroids from scratch for the entire dataset every time you call fit or fit_predict.
+It has no built-in mechanism to "remember" previous centroids or cluster assignments.
+When you re-train on new data with KMeans, the model forgets the patterns learned from earlier data.
+Expensive Re-Training:
+KMeans iterates over the entire dataset repeatedly (based on n_init and max_iter), which becomes computationally expensive as the dataset grows.
+Stateless Nature:
+Each fit call on KMeans is independent and starts from scratch.
+
+When to Use Full Re-Training?
+You should re-train the entire model with KMeans only when:
+The dataset has drastically changed (e.g., a major partner is added or removed).
+You need to reset the clusters entirely to reflect new business conditions
 
 
- 
+clusters ITERATION-1: [
+    {
+        "_id": 0,
+        "average_spending_original": 208.5165321834791,
+        "user_count": 61631,
+        "amount": -0.9457450041859239
+    },
+    {
+        "_id": 2,
+        "average_spending_original": 552.024963983993,
+        "user_count": 56225,
+        "amount": 0.1167349585222572
+    },
+    {
+        "_id": 1,
+        "average_spending_original": 975.5988850736389,
+        "user_count": 36258,
+        "amount": 1.4265482737621704
+    }
+]
+
+ITERATION-2:
+[
+    {
+        "_id": 1,
+        "average_spending_original": 973.8331609897871,
+        "user_count": 73632,
+        "amount": 1.420433685599845
+    },
+    {
+        "_id": 0,
+        "average_spending_original": 210.19394143748002,
+        "user_count": 125080,
+        "amount": -0.9409291398767646
+    },
+    {
+        "_id": 2,
+        "average_spending_original": 552.6213932469918,
+        "user_count": 111032,
+        "amount": 0.11800241081578236
+    }
+]
+
+Monitor Long-Term Stability
+While the current results are consistent, monitor the cluster centers and proportions over multiple iterations to ensure they remain stable.
+Consider adding metrics like silhouette score or inertia to quantitatively measure clustering quality.
+
+What is Inertia?
+Inertia, also known as within-cluster sum-of-squares, measures the compactness of clusters. It calculates the total variance within the clusters. In simpler terms,
+it’s the sum of the distances of each data point in a cluster to the centroid of that cluster,
+squared and summed up for all clusters.
+Key Points:
+A lower inertia value implies a better model, as it indicates tighter clustering.
+However, the inertia metric has a drawback: it keeps decreasing with an increase in the number of clusters ( k ). 
+This is where the “elbow method” is often used to find the optimal ( k ).
+Understanding the Silhouette Coefficient
+The Silhouette Coefficient is a measure of how similar an object is to its own cluster (cohesion) compared to other clusters (separation). The silhouette ranges from -1 to +1, where a high value indicates that the object is well matched to its own cluster and poorly matched to neighboring clusters.
+
+Key Points:
+
+A high silhouette score indicates well-clustered data.
+Unlike inertia, the silhouette score provides more nuanced insight into the separation 
+distance between the resulting clusters.
+

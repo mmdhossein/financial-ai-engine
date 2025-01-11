@@ -27,6 +27,7 @@ class SpendingPatternsService:
     def preprocess_data(self, df:pd.DataFrame):
         # Handle missing values
         df = df.dropna()
+        df['original_amount'] = df['amount']
         # Normalize numeric columns
         df['amount'] = (df['amount'] - df['amount'].mean()) / df['amount'].std()
         # Encode categorical variables (e.g., transaction type)

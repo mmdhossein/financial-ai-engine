@@ -18,7 +18,6 @@ class SpendingPatternsRepository:
                 lambda x: datetime.combine(x, datetime.min.time()) if isinstance(x, date) else x
             )
         # self.db['clusters'].delete_many({})  # Clear old assignments
-        print("sexy", data.to_dict('records')[2])
         self.db['clusters'].insert_many(data.to_dict('records'))
 
     def deleteClusters(self):
@@ -35,6 +34,7 @@ class SpendingPatternsRepository:
             {"$match": {"cluster": cluster_id}},
             {"$group": {
                 "_id": "$cluster",
+                "average_spending_original": {"$avg": "$original_amount"},
                 "average_spending": {"$avg": "$amount"},
                 "user_count": {"$sum": 1}
             }}, 
@@ -47,7 +47,8 @@ class SpendingPatternsRepository:
         return list(self.db['clusters'].aggregate([
             {"$group": {
                 "_id": "$cluster",
-                "average_spending": {"$avg": "$amount"},
+                "z": {"$avg": "$amount"},
+                "average_spending_original": {"$avg": "$original_amount"},
                 "user_count": {"$sum": 1}
             }}
         ]))

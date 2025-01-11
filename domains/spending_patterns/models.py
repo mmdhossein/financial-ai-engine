@@ -1,15 +1,21 @@
 from sklearn.cluster import KMeans
 import pandas as pd
 from .repository import SpendingPatternsRepository
+from sklearn.cluster import MiniBatchKMeans
+
 class SpendingPatternsModel:
     def __init__(self, n_clusters=3):
-        self.model = KMeans(n_clusters=n_clusters)
+        # self.model = KMeans(n_clusters=n_clusters)
+        self.model = MiniBatchKMeans(n_clusters=3, )# better for iterations batch_size=100
         self.cluster_labels = None
         self.repository = SpendingPatternsRepository()
 
     def train(self, data: pd.DataFrame):
-        self.cluster_labels = self.model.fit_predict(data[['amount']])
+        # self.cluster_labels = self.model.fit_predict(data[['amount']])
+        self.model.partial_fit(data[['amount']]) #Scalable for Streaming Data:
+        self.cluster_labels = self.model.predict(data[['amount']])
         print("done training")
+        # print("cluster_labels:", self.cluster_labels)
         data['cluster'] = self.cluster_labels
         self.repository.save_cluster_assignments(data)
 

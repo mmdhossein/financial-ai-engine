@@ -11,6 +11,11 @@ router.add_url_rule(
     '/spending-patterns/insights', 'get_spending_insights', spending_patterns.get_insights, methods=['GET']
 )
 
+router.add_url_rule(
+    '/spending-patterns/clusters', 'get_cluster_insights', spending_patterns.get_cluster_insights, methods=['GET']
+)
+
+
 # Revenue Forecast Endpoints
 router.add_url_rule(
     '/revenue-forecast/train', 'train_revenue_forecast', revenue_forecast.train, methods=['POST']

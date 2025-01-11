@@ -46,3 +46,9 @@ def get_insights():
         return jsonify(insights), 200
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    
+
+def get_cluster_insights():
+    return {"clusters": service.get_cluster_insights(), 
+            "cluster_mapping" : {0: "Low Spenders", 2: "Medium Spenders", 1: "High Spenders"}
+}
